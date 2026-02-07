@@ -11,12 +11,28 @@ namespace BookBasqet.API.Controllers;
 public class DebugController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly bool _isDevelopment;
 
-    public DebugController(ApplicationDbContext context) => _context = context;
+    public DebugController(ApplicationDbContext context, IWebHostEnvironment environment)
+    {
+        _context = context;
+        _isDevelopment = environment.IsDevelopment();
+    }
+
+    private IActionResult? EnsureDevelopment()
+    {
+        return _isDevelopment ? null : NotFound();
+    }
 
     [HttpGet("users")]
     public async Task<IActionResult> GetUsers()
     {
+        var guardResult = EnsureDevelopment();
+        if (guardResult is not null)
+        {
+            return guardResult;
+        }
+
         var users = await _context.Users
             .Include(x => x.Role)
             .Select(x => new
@@ -49,6 +65,12 @@ public class DebugController : ControllerBase
     [HttpGet("me")]
     public IActionResult Me()
     {
+        var guardResult = EnsureDevelopment();
+        if (guardResult is not null)
+        {
+            return guardResult;
+        }
+
         var claims = User.Claims.Select(c => new { c.Type, c.Value });
 
         return Ok(new
@@ -57,9 +79,35 @@ public class DebugController : ControllerBase
             AuthenticationType = User.Identity?.AuthenticationType,
             Name = User.FindFirstValue(ClaimTypes.Name),
             Email = User.FindFirstValue(ClaimTypes.Email),
-            Role = User.FindFirstValue(ClaimTypes.Role),
+            Role = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role"),
             Subject = User.FindFirstValue("sub"),
             Claims = claims
         });
+    }
+
+    [Authorize]
+    [HttpGet("claims")]
+    public IActionResult Claims()
+    {
+        var guardResult = EnsureDevelopment();
+        if (guardResult is not null)
+        {
+            return guardResult;
+        }
+
+        return Ok(User.Claims.Select(c => new { c.Type, c.Value }));
+    }
+
+    [Authorize]
+    [HttpGet("auth-test")]
+    public IActionResult AuthTest()
+    {
+        var guardResult = EnsureDevelopment();
+        if (guardResult is not null)
+        {
+            return guardResult;
+        }
+
+        return Ok(new { Message = "Authenticated" });
     }
 }

@@ -1,5 +1,4 @@
 using System.Text;
-using System.Security.Claims;
 using BookBasqet.Application.Interfaces;
 using BookBasqet.Application.Models.Email;
 using BookBasqet.Application.Services;
@@ -11,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BookBasqet.Infrastructure.DependencyInjection;
 
@@ -50,6 +50,7 @@ public static class ServiceCollectionExtensions
 
         var jwt = configuration.GetSection("Jwt");
         var key = Encoding.UTF8.GetBytes(jwt["Key"]!);
+        var signingKey = new SymmetricSecurityKey(key) { KeyId = "BookBasqetSigningKey" };
 
         services.AddAuthentication(options =>
         {
@@ -60,7 +61,7 @@ public static class ServiceCollectionExtensions
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.MapInboundClaims = false;
+            options.MapInboundClaims = true;
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
@@ -71,7 +72,7 @@ public static class ServiceCollectionExtensions
 
                 ValidIssuer = jwt["Issuer"],
                 ValidAudience = jwt["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = signingKey,
 
                 ClockSkew = TimeSpan.Zero,
 

@@ -10,6 +10,7 @@ namespace BookBasqet.Infrastructure.Security;
 
 public class TokenService : ITokenService
 {
+    private const string SigningKeyId = "BookBasqetSigningKey";
     private readonly IConfiguration _configuration;
 
     public TokenService(IConfiguration configuration) => _configuration = configuration;
@@ -17,7 +18,10 @@ public class TokenService : ITokenService
     public (string Token, DateTime ExpiresAt) GenerateToken(User user, string roleName)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
+        {
+            KeyId = SigningKeyId
+        };
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expiresAt = DateTime.UtcNow.AddMinutes(int.Parse(jwtSettings["ExpirationMinutes"]!));
 

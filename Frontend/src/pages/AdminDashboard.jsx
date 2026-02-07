@@ -45,7 +45,7 @@ const AdminDashboard = () => {
   const user = getAdminUser();
 
   const welcomeText = useMemo(() => {
-    return `Welcome ${user?.fullName || user?.email || 'Admin'} — manage inventory and orders.`;
+    return `Welcome ${user?.name || user?.email || 'Admin'} — manage inventory and orders.`;
   }, [user]);
 
   const handleLogout = () => {

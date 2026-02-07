@@ -7,9 +7,9 @@ export const loginRequest = async (email, password) => {
   });
 };
 
-export const registerRequest = async (fullName, email, password) => {
+export const registerRequest = async (name, email, password) => {
   return apiRequest('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ fullName, email, password })
+    body: JSON.stringify({ name, email, password })
   });
 };

@@ -9,7 +9,7 @@ const StorefrontLayout = () => {
   const { cart } = useCart();
 
   const cartCount = (cart.items || []).reduce((sum, item) => sum + item.quantity, 0);
-  const displayName = user?.fullName || user?.email || 'Reader';
+  const displayName = user?.name || user?.email || 'Reader';
 
   return (
     <>

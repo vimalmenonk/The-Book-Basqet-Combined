@@ -17,7 +17,12 @@ export const getStoredUser = () => {
   const storedUser = localStorage.getItem(USER_STORAGE_KEY);
   if (storedUser) {
     try {
-      return JSON.parse(storedUser);
+      const parsed = JSON.parse(storedUser);
+      return {
+        name: parsed?.name || parsed?.fullName || '',
+        email: parsed?.email || '',
+        role: parsed?.role || ''
+      };
     } catch {
       localStorage.removeItem(USER_STORAGE_KEY);
     }
@@ -32,7 +37,7 @@ export const getStoredUser = () => {
     const claims = JSON.parse(atob(base64));
 
     return {
-      fullName: claims.unique_name || claims.name || '',
+      name: claims.unique_name || claims.name || '',
       email: claims.email || '',
       role: claims.role || ''
     };
@@ -46,7 +51,14 @@ export const setStoredToken = (token, expiresAt, user = null) => {
   localStorage.setItem(TOKEN_STORAGE_KEY, token);
   localStorage.setItem(TOKEN_EXP_STORAGE_KEY, expiresAt || '');
   if (user) {
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+    localStorage.setItem(
+      USER_STORAGE_KEY,
+      JSON.stringify({
+        name: user?.name || user?.fullName || '',
+        email: user?.email || '',
+        role: user?.role || ''
+      })
+    );
   }
 };
 

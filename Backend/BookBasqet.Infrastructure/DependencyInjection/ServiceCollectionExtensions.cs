@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
 
         var jwt = configuration.GetSection("Jwt");
         var key = Encoding.UTF8.GetBytes(jwt["Key"]!);
+        var signingKey = new SymmetricSecurityKey(key) { KeyId = "BookBasqetSigningKey" };
 
         services.AddAuthentication(options =>
         {
@@ -72,7 +73,7 @@ public static class ServiceCollectionExtensions
 
                 ValidIssuer = jwt["Issuer"],
                 ValidAudience = jwt["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = signingKey,
 
                 ClockSkew = TimeSpan.Zero,
 

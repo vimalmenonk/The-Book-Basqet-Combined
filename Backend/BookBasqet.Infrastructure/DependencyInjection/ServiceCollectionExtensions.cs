@@ -1,5 +1,4 @@
 using System.Text;
-using System.Security.Claims;
 using BookBasqet.Application.Interfaces;
 using BookBasqet.Application.Models.Email;
 using BookBasqet.Application.Services;
@@ -11,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BookBasqet.Infrastructure.DependencyInjection;
 
@@ -60,7 +60,7 @@ public static class ServiceCollectionExtensions
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.MapInboundClaims = false;
+            options.MapInboundClaims = true;
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {

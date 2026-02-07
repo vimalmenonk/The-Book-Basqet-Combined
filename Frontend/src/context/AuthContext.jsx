@@ -21,29 +21,29 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const data = await loginRequest(email, password);
     setStoredToken(data?.token, data?.expiresAt, {
-      fullName: data?.fullName,
+      name: data?.name,
       email: data?.email,
       role: data?.role
     });
     setToken(data?.token);
     setUser({
-      fullName: data?.fullName,
+      name: data?.name,
       email: data?.email,
       role: data?.role
     });
     return data;
   };
 
-  const register = async (fullName, email, password) => {
-    const data = await registerRequest(fullName, email, password);
+  const register = async (name, email, password) => {
+    const data = await registerRequest(name, email, password);
     setStoredToken(data?.token, data?.expiresAt, {
-      fullName: data?.fullName,
+      name: data?.name,
       email: data?.email,
       role: data?.role
     });
     setToken(data?.token);
     setUser({
-      fullName: data?.fullName,
+      name: data?.name,
       email: data?.email,
       role: data?.role
     });

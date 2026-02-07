@@ -36,7 +36,7 @@ const AdminLogin = () => {
 
       setAdminSession(data.token, {
         email: data.email,
-        fullName: data.fullName,
+        name: data.name,
         role: data.role,
         expiresAt: data.expiresAt
       });

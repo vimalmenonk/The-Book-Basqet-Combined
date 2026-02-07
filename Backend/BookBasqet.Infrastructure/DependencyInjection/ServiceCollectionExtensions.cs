@@ -60,7 +60,7 @@ public static class ServiceCollectionExtensions
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.MapInboundClaims = false;
+            options.MapInboundClaims = true;
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {

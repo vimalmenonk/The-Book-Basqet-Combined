@@ -79,7 +79,7 @@ public class DebugController : ControllerBase
             AuthenticationType = User.Identity?.AuthenticationType,
             Name = User.FindFirstValue(ClaimTypes.Name),
             Email = User.FindFirstValue(ClaimTypes.Email),
-            Role = User.FindFirstValue(ClaimTypes.Role),
+            Role = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role"),
             Subject = User.FindFirstValue("sub"),
             Claims = claims
         });

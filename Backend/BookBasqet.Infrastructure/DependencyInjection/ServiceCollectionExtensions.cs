@@ -1,5 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Security.Claims;
 using BookBasqet.Application.Interfaces;
 using BookBasqet.Application.Models.Email;
 using BookBasqet.Application.Services;
@@ -75,8 +75,8 @@ public static class ServiceCollectionExtensions
 
                 ClockSkew = TimeSpan.Zero,
 
-                RoleClaimType = ClaimTypes.Role,
-                NameClaimType = ClaimTypes.Name
+                RoleClaimType = "role",
+                NameClaimType = JwtRegisteredClaimNames.UniqueName
             };
 
             options.Events = new JwtBearerEvents
